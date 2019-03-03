@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+
+<!-- TODO: make menu width to application !-->
+<MenuBar fx:id="menu" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MenuController">
+    <Menu text="Program">
+        <MenuItem text="Exit" onAction="#onExit"/>
+    </Menu>
+    <Menu text="About">
+        <MenuItem text="About program" onAction="#onAbout"/>
+    </Menu>
+</MenuBar>

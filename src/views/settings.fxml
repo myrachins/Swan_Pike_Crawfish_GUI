@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane fx:id="settings" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SettingsController">
+    <Label text="Swan Angle" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+    <TextField fx:id="swanAngle" GridPane.rowIndex="0" GridPane.columnIndex="1" onKeyReleased="#setSwanAngle"/>
+    <Label text="Pike Angle" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <TextField fx:id="pikeAngle" GridPane.rowIndex="1" GridPane.columnIndex="1" onKeyReleased="#setPikeAngle"/>
+    <Label text="Pike Angle" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <TextField fx:id="crawfishAngle" GridPane.rowIndex="2" GridPane.columnIndex="1" onKeyReleased="#setCrawfishAngle"/>
+    <FlowPane GridPane.rowIndex="3" GridPane.columnIndex="0">
+        <Button fx:id="start" text="Start" onAction="#onStart"/>
+        <Button fx:id="stop" text="Stop" onAction="#onStop"/>
+        <Button fx:id="reset" text="Reset" onAction="#onReset"/>
+    </FlowPane>
+</GridPane>
+
