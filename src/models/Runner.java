@@ -3,24 +3,21 @@ package models;
 import settings.RunAttributes;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.EventListener;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 
 public class Runner {
     private Runner() { }
 
-    private volatile static ExecuteState state = ExecuteState.STOPPED;
-
     private static ArrayList<Thread> threads;
-    private static ScheduledExecutorService exec;
+    private static TruckListener truckListener;
+
+    public static void setTruckListener(TruckListener listener) {
+        Runner.truckListener = listener;
+    }
 
     public static void start(RunAttributes attributes) throws InterruptedException {
-        if (state == ExecuteState.WORKING) {
-            throw new RuntimeException("Runner is working");
-        }
-        state = ExecuteState.WORKING;
+        truckListener.onStart();
         Truck truck = new Truck(attributes.getStartX(), attributes.getStartY()); // Main truck to move
 
         System.out.println("Truck's start location: \t " + truck.getCoordinates() + System.lineSeparator());
@@ -31,18 +28,14 @@ public class Runner {
         creatures.add(new Creature("Pike", attributes.getPikeAngle()));
         creatures.add(new Creature("Crawfish", attributes.getCrawfishAngle()));
 
-        // Starting timer to output message every specified seconds
-        exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(() -> System.out.println("Truck's location: \t " + truck.getCoordinates()),
-                0, attributes.getRepeatOutputTime(), TimeUnit.SECONDS);
-
         // Creating list of threads to execute
         threads = new ArrayList<>();
 
         for(Creature creature : creatures) {
             threads.add(new Thread(() -> {
                 while (true) {
-                    creature.moveTruck(truck, attributes.getForceLowBound(), attributes.getForceUpperBound()); // TODO: make random upper and low bounds
+                    creature.moveTruck(truck, attributes.getForceLowBound(), attributes.getForceUpperBound());
+                    truckListener.truckMoved(truck);
                     try {
                         Thread.sleep(ThreadLocalRandom.current().nextInt(attributes.getSleepLowBound(),
                                 attributes.getSleepUpperBound()));
@@ -63,15 +56,13 @@ public class Runner {
     }
 
     public static void stop() {
-        if(state == ExecuteState.STOPPED) {
-            throw new RuntimeException("Runner should be started before stopping");
-        }
         threads.forEach(Thread::interrupt); // Interrupting all threads
-        exec.shutdown();
-        state = ExecuteState.STOPPED;
+        truckListener.onFinish();
     }
 
-    private enum ExecuteState {
-        STOPPED, WORKING
+    public interface TruckListener extends EventListener {
+        void truckMoved(Truck truck);
+        void onStart();
+        void onFinish();
     }
 }

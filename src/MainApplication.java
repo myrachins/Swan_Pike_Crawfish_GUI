@@ -12,7 +12,7 @@ public class MainApplication extends Application {
         Parent settings = FXMLLoader.load(getClass().getResource("views/settings.fxml"));
         Parent menu = FXMLLoader.load(getClass().getResource("views/menu.fxml"));
 
-        Group group = new Group(settings, menu);
+        Group group = new Group(settings);
         Scene scene = new Scene(group);
 
         primaryStage.setScene(scene);

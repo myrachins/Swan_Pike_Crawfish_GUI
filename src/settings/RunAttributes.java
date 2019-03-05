@@ -2,21 +2,32 @@ package settings;
 
 public class RunAttributes {
     public RunAttributes() { }
-    // TODO: Make custom constructor
+
+    public RunAttributes(int sleepLowBound, int sleepUpperBound, int forceLowBound, int forceUpperBound,
+                         int swanAngle, int pikeAngle, int crawfishAngle, int workTime,
+                         double startX, double startY)
+    {
+        this.sleepLowBound = sleepLowBound;
+        this.sleepUpperBound = sleepUpperBound;
+        this.forceLowBound = forceLowBound;
+        this.forceUpperBound = forceUpperBound;
+        this.swanAngle = swanAngle;
+        this.pikeAngle = pikeAngle;
+        this.crawfishAngle = crawfishAngle;
+        this.workTime = workTime;
+        this.startX = startX;
+        this.startY = startY;
+    }
 
     private int sleepLowBound = 1000;
     private int sleepUpperBound = 5000;
-    private int repeatOutputTime = 2;
 
-    private int forceLowBound = 0;
-    private int forceUpperBound = 10; // TODO: Check for real default values
+    private int forceLowBound = 1;
+    private int forceUpperBound = 10;
 
     private int swanAngle = 60;
     private int pikeAngle = 180;
     private int crawfishAngle = 300;
-
-    private int coeffLowBound = 1;
-    private int coeffUpperBound = 10;
 
     private int workTime = 25 * 1000;
 
@@ -31,10 +42,6 @@ public class RunAttributes {
         return sleepUpperBound;
     }
 
-    public int getRepeatOutputTime() {
-        return repeatOutputTime;
-    }
-
     public int getSwanAngle() {
         return swanAngle;
     }
@@ -45,14 +52,6 @@ public class RunAttributes {
 
     public int getCrawfishAngle() {
         return crawfishAngle;
-    }
-
-    public int getCoeffLowBound() {
-        return coeffLowBound;
-    }
-
-    public int getCoeffUpperBound() {
-        return coeffUpperBound;
     }
 
     public int getWorkTime() {
