@@ -17,11 +17,13 @@ import settings.AppSettings;
 import settings.RunAttributes;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
 public class SettingsController implements Initializable {
     private ExecuteState state;
+    private HashMap<TextField, Boolean> isCorrect;
 
     public TextField swanAngle;
     public TextField pikeAngle;
@@ -42,11 +44,10 @@ public class SettingsController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setDefaultFields();
         state = ExecuteState.NONWORKING;
-        Runner.setTruckListener(new Runner.TruckListener() {
+        isCorrect = initializeFieldsStates();
+        Runner.addTruckListener(new Runner.TruckListener() {
             @Override
-            public void truckMoved(Truck truck) {
-                // TODO: move truck on screen
-            }
+            public void truckMoved(Truck truck) { }
 
             @Override
             public void onStart() {
@@ -97,15 +98,15 @@ public class SettingsController implements Initializable {
     }
 
     public void setWorkTime(KeyEvent keyEvent) {
-        // TODO: Check value
+        checkField(workTime, (text) -> isInteger(text) && Integer.parseInt(text) > 0);
     }
 
     public void setStartX(KeyEvent keyEvent) {
-        // TODO: Check value
+        checkField(startX, this::isDouble);
     }
 
     public void setStartY(KeyEvent keyEvent) {
-        // TODO: Check value
+        checkField(startY, this::isDouble);
     }
 
     public void onStart(ActionEvent actionEvent) {
@@ -135,6 +136,22 @@ public class SettingsController implements Initializable {
     public void onReset(ActionEvent actionEvent) {
         onStop(actionEvent);
         setDefaultFields();
+    }
+
+    private HashMap<TextField, Boolean> initializeFieldsStates() {
+        HashMap<TextField, Boolean> result = new HashMap<>();
+        result.put(swanAngle, true);
+        result.put(pikeAngle, true);
+        result.put(crawfishAngle, true);
+        result.put(sleepLowBound, true);
+        result.put(sleepUpperBound, true);
+        result.put(forceLowBound, true);
+        result.put(forceUpperBound, true);
+        result.put(workTime, true);
+        result.put(startX, true);
+        result.put(startY, true);
+
+        return result;
     }
 
     private RunAttributes getFields() {
@@ -183,30 +200,69 @@ public class SettingsController implements Initializable {
         String text = textField.getText().trim();
         if(!condition.test(text)) {
             textField.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
-            start.setDisable(true);
+            isCorrect.replace(textField, false);
         } else {
             textField.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-            start.setDisable(false);
+            isCorrect.replace(textField, true);
         }
+        start.setDisable(isCorrect.containsValue(false));
         // TODO: switch to default background
     }
 
     private void checkAngle(TextField textField) {
         checkField(textField, text -> isInteger(text)
-                && Integer.parseInt(text) < AppSettings.MIN_ANGLE
-                && Integer.parseInt(text) > AppSettings.MAX_ANGLE);
+                && Integer.parseInt(text) >= AppSettings.MIN_ANGLE
+                && Integer.parseInt(text) <= AppSettings.MAX_ANGLE);
+    }
+
+    private boolean isDouble(String strNumber) {
+        return !isThrowing(() -> Double.parseDouble(strNumber));
     }
 
     private boolean isInteger(String strNumber) {
+        return !isThrowing(() -> Integer.parseInt(strNumber));
+    }
+
+    private boolean isThrowing(Runnable runnable) {
         try {
-            Integer.parseInt(strNumber);
-        } catch(NumberFormatException e) {
-            return false;
+            runnable.run();
+        } catch(Exception e) {
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    class PairChecker {
+        private State state = State.FW_SW; // First white, second white
+        private Type type;
+        private TextField first;
+        private TextField second;
+
+        public PairChecker(TextField first, TextField second, Type type) {
+            this.first = first;
+            this.second = second;
+            this.type = type;
+        }
+
+        void update() {
+            Comparable a = Integer.parseInt(first.getText());
+            Comparable b = Integer.parseInt(second.getText());
+
+            switch (state) {
+                case FW_SW:
+            }
+        }
     }
 
     private enum ExecuteState {
         NONWORKING, WORKING
+    }
+
+    private enum Type {
+        INTEGER, DOUBLE
+    }
+
+    private enum State {
+        FW_SW, FW_SR, FR_SW, FR_SR
     }
 }

@@ -10,14 +10,21 @@ public class Runner {
     private Runner() { }
 
     private static ArrayList<Thread> threads;
-    private static TruckListener truckListener;
+    private final static ArrayList<TruckListener> truckListeners = new ArrayList<>();
+    // TODO: Add check for state
 
-    public static void setTruckListener(TruckListener listener) {
-        Runner.truckListener = listener;
+    public static void addTruckListener(TruckListener listener) {
+        synchronized (truckListeners) {
+            Runner.truckListeners.add(listener);
+        }
     }
 
     public static void start(RunAttributes attributes) throws InterruptedException {
-        truckListener.onStart();
+        synchronized (truckListeners) {
+            for(TruckListener truckListener : truckListeners) {
+                truckListener.onStart();
+            }
+        }
         Truck truck = new Truck(attributes.getStartX(), attributes.getStartY()); // Main truck to move
 
         System.out.println("Truck's start location: \t " + truck.getCoordinates() + System.lineSeparator());
@@ -35,7 +42,11 @@ public class Runner {
             threads.add(new Thread(() -> {
                 while (true) {
                     creature.moveTruck(truck, attributes.getForceLowBound(), attributes.getForceUpperBound());
-                    truckListener.truckMoved(truck);
+                    synchronized (truckListeners) {
+                        for(TruckListener truckListener : truckListeners) {
+                            truckListener.truckMoved(truck);
+                        }
+                    }
                     try {
                         Thread.sleep(ThreadLocalRandom.current().nextInt(attributes.getSleepLowBound(),
                                 attributes.getSleepUpperBound()));
@@ -57,7 +68,11 @@ public class Runner {
 
     public static void stop() {
         threads.forEach(Thread::interrupt); // Interrupting all threads
-        truckListener.onFinish();
+        synchronized (truckListeners) {
+            for(TruckListener truckListener : truckListeners) {
+                truckListener.onFinish();
+            }
+        }
     }
 
     public interface TruckListener extends EventListener {
