@@ -19,6 +19,7 @@ import settings.RunAttributes;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 public class SettingsController implements Initializable {
@@ -80,21 +81,19 @@ public class SettingsController implements Initializable {
     }
 
     public void setForceLowBound(KeyEvent keyEvent) {
-        checkField(forceLowBound, (text) -> isInteger(text)
-                && Integer.parseInt(text) <= Integer.parseInt(forceUpperBound.getText()));
+        checkPair(forceLowBound, forceUpperBound, text -> isInteger(text), (a, b) -> a <= b);
     }
 
     public void setForceUpperBound(KeyEvent keyEvent) {
-        checkField(forceUpperBound, (text) -> isInteger(text)
-                && Integer.parseInt(text) >= Integer.parseInt(forceLowBound.getText()));
+        checkPair(forceUpperBound, forceLowBound, text -> isInteger(text), (a, b) -> a >= b);
     }
 
     public void setSleepLowBound(KeyEvent keyEvent) {
-        // TODO: Check value
+        checkPair(sleepLowBound, sleepUpperBound, text -> isInteger(text) && Integer.parseInt(text) >= 0, (a, b) -> a <= b);
     }
 
     public void setSleepUpperBound(KeyEvent keyEvent) {
-        // TODO: Check value
+        checkPair(sleepUpperBound, sleepLowBound, text -> isInteger(text) && Integer.parseInt(text) >= 0, (a, b) -> a >= b);
     }
 
     public void setWorkTime(KeyEvent keyEvent) {
@@ -215,6 +214,15 @@ public class SettingsController implements Initializable {
                 && Integer.parseInt(text) <= AppSettings.MAX_ANGLE);
     }
 
+    private void checkPair(TextField changed, TextField sibling, Predicate<String> condition, BiPredicate<Integer, Integer> compare) {
+        checkField(changed, condition);
+        if (isInteger(changed.getText()) && isInteger(sibling.getText())) {
+            Predicate<String> compareCondition = (text) -> compare.test(Integer.parseInt(changed.getText()), Integer.parseInt(sibling.getText()));
+            checkField(changed, condition.and(compareCondition));
+            checkField(sibling, condition.and(compareCondition));
+        }
+    }
+
     private boolean isDouble(String strNumber) {
         return !isThrowing(() -> Double.parseDouble(strNumber));
     }
@@ -232,37 +240,7 @@ public class SettingsController implements Initializable {
         return false;
     }
 
-    class PairChecker {
-        private State state = State.FW_SW; // First white, second white
-        private Type type;
-        private TextField first;
-        private TextField second;
-
-        public PairChecker(TextField first, TextField second, Type type) {
-            this.first = first;
-            this.second = second;
-            this.type = type;
-        }
-
-        void update() {
-            Comparable a = Integer.parseInt(first.getText());
-            Comparable b = Integer.parseInt(second.getText());
-
-            switch (state) {
-                case FW_SW:
-            }
-        }
-    }
-
     private enum ExecuteState {
         NONWORKING, WORKING
-    }
-
-    private enum Type {
-        INTEGER, DOUBLE
-    }
-
-    private enum State {
-        FW_SW, FW_SR, FR_SW, FR_SR
     }
 }
