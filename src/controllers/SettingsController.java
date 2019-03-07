@@ -3,7 +3,6 @@ package controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -23,7 +22,11 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 public class SettingsController implements Initializable {
-    private ExecuteState state;
+    /**
+     * If we would use SettingsController from different threads, we should mark it as volatile
+     * By know it's called only from application thread
+     */
+    private /*volatile*/ ExecuteState state;
     private HashMap<TextField, Boolean> isCorrect;
 
     public TextField swanAngle;
@@ -112,15 +115,7 @@ public class SettingsController implements Initializable {
         if (state == ExecuteState.WORKING) {
             Runner.stop(); // Perfectly it's never gonna happen
         }
-        try {
-            Runner.start(getFields());
-        } catch (InterruptedException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error occurred while running");
-            alert.setHeaderText("Main thread was interrupted");
-            alert.setContentText(e.getLocalizedMessage());
-            alert.showAndWait();
-        }
+        Runner.start(getFields());
     }
 
     public void onStop(ActionEvent actionEvent) {

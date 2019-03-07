@@ -4,7 +4,9 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import models.Runner;
 import settings.AppSettings;
+import settings.RunAttributes;
 
 public class MainApplication extends Application {
     @Override
@@ -22,5 +24,7 @@ public class MainApplication extends Application {
         primaryStage.setWidth(AppSettings.APP_WIDTH);
         primaryStage.setHeight(AppSettings.APP_HEIGHT);
         primaryStage.show();
+
+        Runner.start(new RunAttributes());
     }
 }
