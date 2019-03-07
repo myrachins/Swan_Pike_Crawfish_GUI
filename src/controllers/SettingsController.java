@@ -1,8 +1,10 @@
 package controllers;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -14,6 +16,7 @@ import models.Runner;
 import models.Truck;
 import settings.AppSettings;
 import settings.RunAttributes;
+import utils.AlertFactory;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -50,6 +53,8 @@ public class SettingsController implements Initializable {
         state = ExecuteState.NONWORKING;
         isCorrect = initializeFieldsStates();
         Runner.addTruckListener(new Runner.TruckListener() {
+            private long timeOfSimulationStart;
+
             @Override
             public void truckMoved(Truck truck) { }
 
@@ -59,10 +64,18 @@ public class SettingsController implements Initializable {
                 stop.setDisable(false);
                 setDisableAllFields(true);
                 state = ExecuteState.WORKING;
+                timeOfSimulationStart = System.currentTimeMillis();
             }
 
             @Override
             public void onFinish() {
+                Platform.runLater(() -> {
+                    Alert alert = AlertFactory.GetAlert(AlertFactory.AlertType.INFO, "Program dialog",
+                            "Simulation has been finished", "Duration of simulation: "
+                                    + (System.currentTimeMillis() - timeOfSimulationStart));
+                    alert.showAndWait();
+                });
+
                 start.setDisable(false);
                 stop.setDisable(true);
                 setDisableAllFields(false);
