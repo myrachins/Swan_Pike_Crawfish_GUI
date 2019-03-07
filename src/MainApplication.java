@@ -11,9 +11,10 @@ public class MainApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent settings = FXMLLoader.load(getClass().getResource("views/settings.fxml"));
         Parent menu = FXMLLoader.load(getClass().getResource("views/menu.fxml"));
+        Parent canvas = FXMLLoader.load(getClass().getResource("views/canvas.fxml"));
         // TODO: make border pane with all views
 
-        Group group = new Group(settings);
+        Group group = new Group(canvas);
         Scene scene = new Scene(group);
 
         primaryStage.setScene(scene);

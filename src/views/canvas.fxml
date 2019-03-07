@@ -2,4 +2,7 @@
 
 <?import javafx.scene.canvas.Canvas?>
 
-<Canvas fx:id="canvas" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CanvasController"/>
+<?import javafx.scene.layout.FlowPane?>
+<FlowPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CanvasController">
+    <Canvas fx:id="canvas" width="300" height="300"/>
+</FlowPane>
