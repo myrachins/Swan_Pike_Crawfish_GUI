@@ -12,7 +12,7 @@ public class Runner {
     private Runner() { }
 
     /**
-     * If we would use Runner from different threads, we should mark it as volatile
+     * If we would use Runner from different threads, we should mark it as volatile or add some synchronized blocks
      * By know it's called only from application thread
      */
     private static /*volatile*/ ExecuteState state = ExecuteState.NONWORKING;
@@ -23,6 +23,7 @@ public class Runner {
     public static void addTruckListener(TruckListener listener) {
         synchronized (truckListeners) {
             Runner.truckListeners.add(listener);
+            truckListeners.notifyAll();
         }
     }
 
@@ -35,6 +36,7 @@ public class Runner {
             for(TruckListener truckListener : truckListeners) {
                 truckListener.onStart();
             }
+            truckListeners.notifyAll();
         }
         Truck truck = new Truck(attributes.getStartX(), attributes.getStartY()); // Main truck to move
 
@@ -58,6 +60,7 @@ public class Runner {
                         for(TruckListener truckListener : truckListeners) {
                             truckListener.truckMoved(truck);
                         }
+                        truckListeners.notifyAll();
                     }
                     try {
                         Thread.sleep(ThreadLocalRandom.current().nextInt(attributes.getSleepLowBound(),
@@ -76,7 +79,9 @@ public class Runner {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                stop();
+                if(state == ExecuteState.WORKING) {
+                    stop();
+                }
             }
         }, attributes.getWorkTime());
     }

@@ -3,10 +3,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import models.Runner;
 import settings.AppSettings;
-import settings.RunAttributes;
 
 public class MainApplication extends Application {
     @Override
@@ -14,9 +13,12 @@ public class MainApplication extends Application {
         Parent settings = FXMLLoader.load(getClass().getResource("views/settings.fxml"));
         Parent menu = FXMLLoader.load(getClass().getResource("views/menu.fxml"));
         Parent canvas = FXMLLoader.load(getClass().getResource("views/canvas.fxml"));
-        // TODO: make border pane with all views
+        BorderPane root = new BorderPane();
+        root.setCenter(canvas);
+        root.setTop(menu);
+        root.setRight(settings);
 
-        Group group = new Group(canvas);
+        Group group = new Group(root);
         Scene scene = new Scene(group);
 
         primaryStage.setScene(scene);
@@ -24,7 +26,5 @@ public class MainApplication extends Application {
         primaryStage.setWidth(AppSettings.APP_WIDTH);
         primaryStage.setHeight(AppSettings.APP_HEIGHT);
         primaryStage.show();
-
-        Runner.start(new RunAttributes());
     }
 }

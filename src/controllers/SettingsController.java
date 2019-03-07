@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 
 public class SettingsController implements Initializable {
     /**
-     * If we would use SettingsController from different threads, we should mark it as volatile
+     * If we would use SettingsController from different threads, we should mark it as volatile or add some synchronized blocks
      * By know it's called only from application thread
      */
     private /*volatile*/ ExecuteState state;
