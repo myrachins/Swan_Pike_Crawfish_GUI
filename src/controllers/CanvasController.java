@@ -22,12 +22,13 @@ public class CanvasController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         truckHistory = new ArrayList<>();
+        drawBorder();
         Runner.addTruckListener(new Runner.TruckListener() {
             @Override
             public void truckMoved(Truck truck, Collection<Creature> creatures) {
                 synchronized (canvas) {
                     GraphicsContext gc = canvas.getGraphicsContext2D();
-                    gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // clearing canvas
+                    clearCanvas();
                     setContext(gc);
                     synchronized (truck) {
                         truckHistory.add(new Pair<>(truck.getX(), truck.getY())); // adding new element to history
@@ -45,12 +46,20 @@ public class CanvasController implements Initializable {
             public void onFinish() {
                 synchronized (canvas) {
                     GraphicsContext gc = canvas.getGraphicsContext2D();
-                    gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // clearing canvas
+                    clearCanvas();
                     truckHistory.clear();
                     canvas.notifyAll();
                 }
             }
         });
+    }
+
+    private void clearCanvas() {
+        synchronized (canvas) {
+            GraphicsContext gc = canvas.getGraphicsContext2D();
+            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // clearing canvas
+            drawBorder();
+        }
     }
 
     private double getCanvasXCenter() {
@@ -59,6 +68,16 @@ public class CanvasController implements Initializable {
 
     private double getCanvasYCenter() {
         return canvas.getHeight() / 2;
+    }
+
+    private void drawBorder() {
+        synchronized (canvas) {
+            GraphicsContext gc = canvas.getGraphicsContext2D() ;
+            gc.setStroke(Color.GREY);
+            gc.setLineWidth(4);
+            gc.strokeRoundRect(0, 0, canvas.getWidth(), canvas.getHeight(), 0, 0);
+            //gc.stroke();
+        }
     }
 
     private void setContext(GraphicsContext gc) {
