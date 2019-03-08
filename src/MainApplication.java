@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -25,6 +26,7 @@ public class MainApplication extends Application {
         primaryStage.setTitle(AppSettings.PROGRAM_NAME);
         primaryStage.setWidth(AppSettings.APP_WIDTH);
         primaryStage.setHeight(AppSettings.APP_HEIGHT);
+        primaryStage.setOnCloseRequest(e -> System.exit(0));
         primaryStage.show();
     }
 }

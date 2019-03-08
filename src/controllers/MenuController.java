@@ -7,7 +7,7 @@ import utils.AlertFactory;
 
 public class MenuController {
     public void onExit(ActionEvent actionEvent) {
-        // TODO: exit application
+        System.exit(0);
     }
 
     public void onAbout(ActionEvent actionEvent) {
