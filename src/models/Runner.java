@@ -2,10 +2,7 @@ package models;
 
 import settings.RunAttributes;
 
-import java.util.ArrayList;
-import java.util.EventListener;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Runner {
@@ -58,7 +55,7 @@ public class Runner {
                     System.out.println("Trucked moved by " + creature.getName());
                     synchronized (truckListeners) {
                         for(TruckListener truckListener : truckListeners) {
-                            truckListener.truckMoved(truck);
+                            truckListener.truckMoved(truck, creatures);
                         }
                         truckListeners.notifyAll();
                     }
@@ -100,7 +97,7 @@ public class Runner {
     }
 
     public interface TruckListener extends EventListener {
-        void truckMoved(Truck truck);
+        void truckMoved(Truck truck, Collection<Creature> creatures);
         void onStart();
         void onFinish();
     }

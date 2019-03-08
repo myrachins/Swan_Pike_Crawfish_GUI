@@ -12,6 +12,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import models.Creature;
 import models.Runner;
 import models.Truck;
 import settings.AppSettings;
@@ -19,6 +20,7 @@ import settings.RunAttributes;
 import utils.AlertFactory;
 
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.function.BiPredicate;
@@ -56,7 +58,7 @@ public class SettingsController implements Initializable {
             private long timeOfSimulationStart;
 
             @Override
-            public void truckMoved(Truck truck) { }
+            public void truckMoved(Truck truck, Collection<Creature> creatures) { }
 
             @Override
             public void onStart() {
