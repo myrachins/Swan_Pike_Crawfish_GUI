@@ -11,7 +11,7 @@ public class MenuController {
     }
 
     public void onAbout(ActionEvent actionEvent) {
-        Alert alert = AlertFactory.GetAlert(AlertFactory.AlertType.INFO, "About program",
+        Alert alert = AlertFactory.getInfoAlert("About program",
                 AppSettings.PROGRAM_NAME, AppSettings.ABOUT_PROGRAM);
         alert.showAndWait();
     }

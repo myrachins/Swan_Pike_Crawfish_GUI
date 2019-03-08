@@ -70,7 +70,7 @@ public class SettingsController implements Initializable {
             @Override
             public void onFinish() {
                 Platform.runLater(() -> {
-                    Alert alert = AlertFactory.GetAlert(AlertFactory.AlertType.INFO, "Program dialog",
+                    Alert alert = AlertFactory.getInfoAlert("Program dialog",
                             "Simulation has been finished", "Duration of simulation: "
                                     + (System.currentTimeMillis() - timeOfSimulationStart));
                     alert.showAndWait();
