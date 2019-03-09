@@ -9,8 +9,8 @@ public class AppSettings {
     public static final int MIN_ANGLE = 0;
     public static final int MAX_ANGLE = 360;
 
-    public static final int APP_WIDTH = 800;
-    public static final int APP_HEIGHT = 600;
+    public static final int APP_WIDTH = 700;
+    public static final int APP_HEIGHT = 400;
 
     public static final int TRUCK_WIDTH = 5;
     public static final int TRUCK_HEIGHT = 5;

@@ -1,5 +1,4 @@
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -14,6 +13,7 @@ public class MainApplication extends Application {
         Parent settings = FXMLLoader.load(getClass().getResource("views/settings.fxml"));
         Parent menu = FXMLLoader.load(getClass().getResource("views/menu.fxml"));
         Parent canvas = FXMLLoader.load(getClass().getResource("views/canvas.fxml"));
+
         BorderPane root = new BorderPane();
         root.setCenter(canvas);
         root.setTop(menu);
@@ -22,10 +22,14 @@ public class MainApplication extends Application {
         Group group = new Group(root);
         Scene scene = new Scene(group);
 
+        root.prefHeightProperty().bind(scene.heightProperty());
+        root.prefWidthProperty().bind(scene.widthProperty());
+
         primaryStage.setScene(scene);
         primaryStage.setTitle(AppSettings.PROGRAM_NAME);
         primaryStage.setWidth(AppSettings.APP_WIDTH);
         primaryStage.setHeight(AppSettings.APP_HEIGHT);
+        primaryStage.setMaxHeight(AppSettings.APP_HEIGHT);
         primaryStage.setOnCloseRequest(e -> System.exit(0));
         primaryStage.show();
     }
