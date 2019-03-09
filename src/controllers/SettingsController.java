@@ -27,13 +27,6 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 public class SettingsController implements Initializable {
-    /**
-     * If we would use SettingsController from different threads, we should mark it as volatile or add some synchronized blocks
-     * By know it's called only from application thread
-     */
-    private /*volatile*/ ExecuteState state;
-    private HashMap<TextField, Boolean> isCorrect;
-
     public TextField swanAngle;
     public TextField pikeAngle;
     public TextField crawfishAngle;
@@ -45,9 +38,28 @@ public class SettingsController implements Initializable {
     public TextField startX;
     public TextField startY;
 
+    public Button swanAngleHelp;
+    public Button pikeAngleHelp;
+    public Button crawfishAngleHelp;
+    public Button forceLowBoundHelp;
+    public Button forceUpperBoundHelp;
+    public Button sleepLowBoundHelp;
+    public Button sleepUpperBoundHelp;
+    public Button workTimeHelp;
+    public Button startXHelp;
+    public Button startYHelp;
+
     public Button start;
     public Button stop;
     public Button reset;
+
+    /**
+     * If we would use SettingsController from different threads, we should mark it as volatile or add some synchronized blocks
+     * By know it's called only from application thread
+     */
+    private /*volatile*/ ExecuteState state;
+    private HashMap<TextField, Boolean> isCorrect;
+    private HashMap<TextField, Button> helpButtons;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -84,6 +96,17 @@ public class SettingsController implements Initializable {
                 state = ExecuteState.NONWORKING;
             }
         });
+        helpButtons = new HashMap<>();
+        helpButtons.put(swanAngle, swanAngleHelp);
+        helpButtons.put(pikeAngle, pikeAngleHelp);
+        helpButtons.put(crawfishAngle, crawfishAngleHelp);
+        helpButtons.put(sleepLowBound, sleepLowBoundHelp);
+        helpButtons.put(sleepUpperBound, sleepUpperBoundHelp);
+        helpButtons.put(forceLowBound, forceLowBoundHelp);
+        helpButtons.put(forceUpperBound, forceUpperBoundHelp);
+        helpButtons.put(workTime, workTimeHelp);
+        helpButtons.put(startX, startXHelp);
+        helpButtons.put(startY, startYHelp);
     }
 
     public void setSwanAngle(KeyEvent actionEvent) {
@@ -210,9 +233,11 @@ public class SettingsController implements Initializable {
         if(!condition.test(text)) {
             textField.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
             isCorrect.replace(textField, false);
+            helpButtons.get(textField).setVisible(true);
         } else {
             textField.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             isCorrect.replace(textField, true);
+            helpButtons.get(textField).setVisible(false);
         }
         start.setDisable(isCorrect.containsValue(false));
         // TODO: switch to default background
@@ -248,6 +273,66 @@ public class SettingsController implements Initializable {
             return true;
         }
         return false;
+    }
+
+    public void onSwanAngleHelp(ActionEvent actionEvent) {
+        Alert alert = AlertFactory.getErrorAlertForInput("Swan Angle",
+                "Swan angle should be integer from 0 to 360");
+        alert.showAndWait();
+    }
+
+    public void onPikeAngleHelp(ActionEvent actionEvent) {
+        Alert alert = AlertFactory.getErrorAlertForInput("Pike Angle",
+                "Pike angle should be integer from 0 to 360");
+        alert.showAndWait();
+    }
+
+    public void onCrawfishAngleHelp(ActionEvent actionEvent) {
+        Alert alert = AlertFactory.getErrorAlertForInput("Crawfish Angle",
+                "Crawfish angle should be integer from 0 to 360");
+        alert.showAndWait();
+    }
+
+    public void onForceLowBoundHelp(ActionEvent actionEvent) {
+        Alert alert = AlertFactory.getErrorAlertForInput("Force low bound",
+                "Force low bound should be integer less than force upper bound");
+        alert.showAndWait();
+    }
+
+    public void onForceUpperBoundHelp(ActionEvent actionEvent) {
+        Alert alert = AlertFactory.getErrorAlertForInput("Force upper bound",
+                "Force upper bound should be integer greater than force low bound");
+        alert.showAndWait();
+    }
+
+    public void onSleepLowBoundHelp(ActionEvent actionEvent) {
+        Alert alert = AlertFactory.getErrorAlertForInput("Sleep low bound",
+                "Sleep low bound should be integer no less, than 0 and less than sleep upper bound");
+        alert.showAndWait();
+    }
+
+    public void onSleepUpperBoundHelp(ActionEvent actionEvent) {
+        Alert alert = AlertFactory.getErrorAlertForInput("Sleep upper bound",
+                "Sleep upper bound should be integer no less, than 0 and greater than sleep low bound");
+        alert.showAndWait();
+    }
+
+    public void onWorkTimeHelp(ActionEvent actionEvent) {
+        Alert alert = AlertFactory.getErrorAlertForInput("Time of simulation",
+                "Time of simulation should be integer greater than 0");
+        alert.showAndWait();
+    }
+
+    public void onStartXHelp(ActionEvent actionEvent) {
+        Alert alert = AlertFactory.getErrorAlertForInput("X start coordinate",
+                "X start coordinate should be real number");
+        alert.showAndWait();
+    }
+
+    public void onStartYHelp(ActionEvent actionEvent) {
+        Alert alert = AlertFactory.getErrorAlertForInput("Y start coordinate",
+                "Y start coordinate should be real number");
+        alert.showAndWait();
     }
 
     private enum ExecuteState {

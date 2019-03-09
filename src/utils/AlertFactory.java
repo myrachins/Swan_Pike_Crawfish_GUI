@@ -12,4 +12,8 @@ public class AlertFactory {
     public static Alert getErrorAlert(String title, String header, String content) {
         return new ErrorAlert(title, header, content);
     }
+
+    public static Alert getErrorAlertForInput(String inputName, String content) {
+        return new ErrorAlert("Input error", "Invalid input for " + inputName, content);
+    }
 }
