@@ -40,17 +40,16 @@ public class CanvasController implements Initializable {
             }
 
             @Override
-            public void onStart() { }
-
-            @Override
-            public void onFinish() {
+            public void onStart() {
                 synchronized (canvas) {
-                    GraphicsContext gc = canvas.getGraphicsContext2D();
                     clearCanvas();
                     truckHistory.clear();
                     canvas.notifyAll();
                 }
             }
+
+            @Override
+            public void onFinish() { }
         });
     }
 
