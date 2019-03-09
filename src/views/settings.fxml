@@ -44,6 +44,9 @@
         <Label text="Y start coordinate" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
         <Button fx:id="startYHelp" text="?" GridPane.rowIndex="9" GridPane.columnIndex="1" visible="false" onAction="#onStartYHelp"/>
         <TextField fx:id="startY" GridPane.rowIndex="9" GridPane.columnIndex="2" onKeyReleased="#setStartY"/>
+
+        <Label fx:id="xCoordinate" GridPane.rowIndex="10" GridPane.columnIndex="0" visible="false"/>
+        <Label fx:id="yCoordinate" GridPane.rowIndex="10" GridPane.columnIndex="2" visible="false"/>
     </GridPane>
     <TilePane orientation="HORIZONTAL">
         <Button fx:id="start" text="Start" onAction="#onStart"/>

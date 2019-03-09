@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
@@ -53,6 +54,9 @@ public class SettingsController implements Initializable {
     public Button stop;
     public Button reset;
 
+    public Label xCoordinate;
+    public Label yCoordinate;
+
     /**
      * If we would use SettingsController from different threads, we should mark it as volatile or add some synchronized blocks
      * By know it's called only from application thread
@@ -70,13 +74,22 @@ public class SettingsController implements Initializable {
             private long timeOfSimulationStart;
 
             @Override
-            public void truckMoved(Truck truck, Collection<Creature> creatures) { }
+            public void truckMoved(Truck truck, Collection<Creature> creatures) {
+                synchronized (truck) {
+                    Platform.runLater(() -> {
+                        xCoordinate.setText(String.format("X: %.3f", truck.getX()));
+                        yCoordinate.setText(String.format("Y: %.3f", truck.getY()));
+                    });
+                }
+            }
 
             @Override
             public void onStart() {
                 start.setDisable(true);
                 stop.setDisable(false);
                 setDisableAllFields(true);
+                xCoordinate.setVisible(true);
+                yCoordinate.setVisible(true);
                 state = ExecuteState.WORKING;
                 timeOfSimulationStart = System.currentTimeMillis();
             }
@@ -94,6 +107,8 @@ public class SettingsController implements Initializable {
                 start.setDisable(false);
                 stop.setDisable(true);
                 setDisableAllFields(false);
+                xCoordinate.setVisible(false);
+                yCoordinate.setVisible(false);
                 state = ExecuteState.NONWORKING;
             }
         });
