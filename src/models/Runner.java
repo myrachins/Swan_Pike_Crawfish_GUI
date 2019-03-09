@@ -71,7 +71,7 @@ public class Runner {
         threads.forEach(Thread::start);
         executor = new Thread(() -> {
             try {
-                Thread.sleep(attributes.getWorkTime() * 1000); // Converting seconds to milliseconds
+                Thread.sleep(attributes.getWorkTime() * 1000L); // Converting seconds to milliseconds
                 stop();
             } catch (InterruptedException e) {
                 System.out.println("Task was denied");
