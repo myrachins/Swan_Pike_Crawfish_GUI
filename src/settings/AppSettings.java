@@ -1,6 +1,7 @@
 package settings;
 
 import javafx.scene.paint.Color;
+import utils.ColorConverter;
 
 public class AppSettings {
     private AppSettings() { }
@@ -22,5 +23,16 @@ public class AppSettings {
     public static final Color CRAWFISH_COLOR = Color.GREEN;
 
     public static final String PROGRAM_NAME = "Swan, Pike & Crawfish";
-    public static final String ABOUT_PROGRAM = "About Program"; // TODO: Write text about program
+    public static final String ABOUT_PROGRAM =
+            "This task is a part of the discipline \"Software Construction\", SE, HSE" +
+                    System.lineSeparator() +
+            "Program supports simulation of Krylov's fable: Swan, Pike & Crawfish" +
+                    System.lineSeparator() +
+            "Swan color: " + ColorConverter.getColorName(AppSettings.SWAN_COLOR) +
+                    System.lineSeparator() +
+            "Pike color: " + ColorConverter.getColorName(AppSettings.PIKE_COLOR) +
+                    System.lineSeparator() +
+            "Crawfish color: " + ColorConverter.getColorName(AppSettings.CRAWFISH_COLOR) +
+                    System.lineSeparator() + System.lineSeparator() +
+            "Program is made by Maxim Rachinskiy";
 }
