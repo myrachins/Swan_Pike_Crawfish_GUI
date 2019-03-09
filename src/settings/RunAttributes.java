@@ -29,7 +29,10 @@ public class RunAttributes {
     private int pikeAngle = 180;
     private int crawfishAngle = 300;
 
-    private int workTime = 25 * 1000;
+    /**
+     * Duration of simulation in seconds
+     */
+    private int workTime = 25;
 
     private double startX;
     private double startY;

@@ -84,9 +84,10 @@ public class SettingsController implements Initializable {
             @Override
             public void onFinish() {
                 Platform.runLater(() -> {
+                    int spentSeconds = Math.round((System.currentTimeMillis() - timeOfSimulationStart) / 1000f);
                     Alert alert = AlertFactory.getInfoAlert("Program dialog",
-                            "Simulation has been finished", "Duration of simulation: "
-                                    + (System.currentTimeMillis() - timeOfSimulationStart));
+                            "Simulation has been finished", "Duration of simulation in seconds: "
+                                    + spentSeconds);
                     alert.showAndWait();
                 });
 
@@ -322,7 +323,7 @@ public class SettingsController implements Initializable {
 
     public void onWorkTimeHelp(ActionEvent actionEvent) {
         Alert alert = AlertFactory.getErrorAlertForInput("Time of simulation",
-                "Time of simulation should be integer greater than 0");
+                "Time of simulation in seconds should be integer greater than 0");
         alert.showAndWait();
     }
 

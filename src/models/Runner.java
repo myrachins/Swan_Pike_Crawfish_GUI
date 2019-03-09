@@ -80,7 +80,7 @@ public class Runner {
                     stop();
                 }
             }
-        }, attributes.getWorkTime());
+        }, attributes.getWorkTime() * 1000); // Converting seconds to milliseconds
     }
 
     public static void stop() {
