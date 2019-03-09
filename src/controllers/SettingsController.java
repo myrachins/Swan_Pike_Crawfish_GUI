@@ -168,6 +168,9 @@ public class SettingsController implements Initializable {
     public void onReset(ActionEvent actionEvent) {
         onStop(actionEvent);
         setDefaultFields();
+        for(TextField textField : helpButtons.keySet()) { // checking all inputs after switching to default
+            textField.getOnKeyReleased().handle(new KeyEvent(null, null, null, null, false, false, false, false));
+        }
     }
 
     private HashMap<TextField, Boolean> initializeFieldsStates() {
