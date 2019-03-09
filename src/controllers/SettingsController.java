@@ -235,16 +235,15 @@ public class SettingsController implements Initializable {
     private void checkField(TextField textField, Predicate<String> condition) {
         String text = textField.getText().trim();
         if(!condition.test(text)) {
-            textField.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+            textField.setStyle("-fx-text-inner-color: red;");
             isCorrect.replace(textField, false);
             helpButtons.get(textField).setVisible(true);
         } else {
-            textField.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+            textField.setStyle("-fx-text-inner-color: black;");
             isCorrect.replace(textField, true);
             helpButtons.get(textField).setVisible(false);
         }
         start.setDisable(isCorrect.containsValue(false));
-        // TODO: switch to default background
     }
 
     private void checkAngle(TextField textField) {
