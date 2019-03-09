@@ -138,19 +138,19 @@ public class SettingsController implements Initializable {
     }
 
     public void setForceLowBound(KeyEvent keyEvent) {
-        checkPair(forceLowBound, forceUpperBound, text -> isInteger(text), (a, b) -> a <= b);
+        checkPair(forceLowBound, forceUpperBound, text -> isInteger(text), (a, b) -> a < b);
     }
 
     public void setForceUpperBound(KeyEvent keyEvent) {
-        checkPair(forceUpperBound, forceLowBound, text -> isInteger(text), (a, b) -> a >= b);
+        checkPair(forceUpperBound, forceLowBound, text -> isInteger(text), (a, b) -> a > b);
     }
 
     public void setSleepLowBound(KeyEvent keyEvent) {
-        checkPair(sleepLowBound, sleepUpperBound, text -> isInteger(text) && Integer.parseInt(text) >= 0, (a, b) -> a <= b);
+        checkPair(sleepLowBound, sleepUpperBound, text -> isInteger(text) && Integer.parseInt(text) >= 0, (a, b) -> a < b);
     }
 
     public void setSleepUpperBound(KeyEvent keyEvent) {
-        checkPair(sleepUpperBound, sleepLowBound, text -> isInteger(text) && Integer.parseInt(text) >= 0, (a, b) -> a >= b);
+        checkPair(sleepUpperBound, sleepLowBound, text -> isInteger(text) && Integer.parseInt(text) >= 0, (a, b) -> a > b);
     }
 
     public void setWorkTime(KeyEvent keyEvent) {
