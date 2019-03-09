@@ -1,5 +1,7 @@
 package settings;
 
+import javafx.scene.paint.Color;
+
 public class AppSettings {
     private AppSettings() { }
 
@@ -11,6 +13,13 @@ public class AppSettings {
 
     public static final int TRUCK_WIDTH = 5;
     public static final int TRUCK_HEIGHT = 5;
+
+    public static final int CREATURE_WIDTH = 10;
+    public static final int CREATURE_HEIGHT = 10;
+
+    public static final Color SWAN_COLOR = Color.BLUE;
+    public static final Color PIKE_COLOR = Color.RED;
+    public static final Color CRAWFISH_COLOR = Color.GREEN;
 
     public static final String PROGRAM_NAME = "Swan, Pike & Crawfish";
     public static final String ABOUT_PROGRAM = "About Program"; // TODO: Write text about program

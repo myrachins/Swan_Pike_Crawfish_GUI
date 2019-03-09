@@ -1,5 +1,6 @@
 package models;
 
+import settings.AppSettings;
 import settings.RunAttributes;
 
 import java.util.*;
@@ -41,9 +42,9 @@ public class Runner {
 
         // Creating list of creatures
         ArrayList<Creature> creatures = new ArrayList<>();
-        creatures.add(new Creature("Swan", attributes.getSwanAngle()));
-        creatures.add(new Creature("Pike", attributes.getPikeAngle()));
-        creatures.add(new Creature("Crawfish", attributes.getCrawfishAngle()));
+        creatures.add(new Creature("Swan", attributes.getSwanAngle(), AppSettings.SWAN_COLOR));
+        creatures.add(new Creature("Pike", attributes.getPikeAngle(), AppSettings.PIKE_COLOR));
+        creatures.add(new Creature("Crawfish", attributes.getCrawfishAngle(), AppSettings.CRAWFISH_COLOR));
 
         // Creating list of threads to execute
         threads = new ArrayList<>();

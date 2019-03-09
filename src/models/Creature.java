@@ -1,10 +1,13 @@
 package models;
 
+import javafx.scene.paint.Color;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Creature {
     private String name;
     private double angle;
+    private Color color;
 
     /**
      * Cosine of angle value. Calculates just ones
@@ -25,6 +28,18 @@ public class Creature {
         this.angle = angle;
         this.cosAngle = Math.cos(Math.PI * angle / 180f);
         this.sinAngle = Math.sin(Math.PI * angle / 180f);
+        this.color = Color.BLUE;
+    }
+
+    /**
+     *
+     * @param name: Name of creature
+     * @param angle: Angle of creature in degrees
+     * @param color: Color of creature
+     */
+    public Creature(String name, int angle, Color color) {
+        this(name, angle);
+        this.color = color;
     }
 
     public String getName() {
@@ -33,6 +48,10 @@ public class Creature {
 
     public double getAngle() {
         return angle;
+    }
+
+    public Color getColor() {
+        return color;
     }
 
     public void moveTruck(Truck truck, int forceLowBound, int forceUpperBound) {
