@@ -5,6 +5,7 @@
 ## Structure of the project
 * `/docs` - the task
 * `/src` - source code
+* `/tests` - tests
 * readme.md
 
 ## Additional functionality
