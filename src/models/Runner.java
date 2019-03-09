@@ -2,6 +2,7 @@ package models;
 
 import settings.AppSettings;
 import settings.RunAttributes;
+import sun.awt.windows.ThemeReader;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -9,14 +10,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Runner {
     private Runner() { }
 
-    /**
-     * If we would use Runner from different threads, we should mark it as volatile or add some synchronized blocks
-     * By know it's called only from application thread
-     */
-    private static /*volatile*/ ExecuteState state = ExecuteState.NONWORKING;
     private static ArrayList<Thread> threads;
     private final static ArrayList<TruckListener> truckListeners = new ArrayList<>();
-    private final static Timer timer = new Timer();
+    private static Thread executor = new Thread();
 
     public static void addTruckListener(TruckListener listener) {
         synchronized (truckListeners) {
@@ -25,11 +21,10 @@ public class Runner {
         }
     }
 
-    public static void start(RunAttributes attributes) {
-        if (state == ExecuteState.WORKING) {
+    public static void start(RunAttributes attributes) { // start is invoked only from application thread
+        if (executor.isAlive()) {
             throw new RuntimeException("Runner is already started");
         }
-        state = ExecuteState.WORKING;
         synchronized (truckListeners) {
             for(TruckListener truckListener : truckListeners) {
                 truckListener.onStart();
@@ -74,18 +69,19 @@ public class Runner {
         // We start executing threads only here to make competition more fair - we do not spend much time on creation new
         // objects of streams, while already created objects are executing at the moment
         threads.forEach(Thread::start);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if(state == ExecuteState.WORKING) {
-                    stop();
-                }
+        executor = new Thread(() -> {
+            try {
+                Thread.sleep(attributes.getWorkTime() * 1000); // Converting seconds to milliseconds
+                stop();
+            } catch (InterruptedException e) {
+                System.out.println("Task was denied");
             }
-        }, attributes.getWorkTime() * 1000); // Converting seconds to milliseconds
+        });
+        executor.start();
     }
 
-    public static void stop() {
-        if (state == ExecuteState.NONWORKING) {
+    public static synchronized void stop() { // stop can be invoked either from executor thread or from application thread
+        if (!executor.isAlive()) {
             throw new RuntimeException("Runner hasn't been started yet");
         }
         threads.forEach(Thread::interrupt); // Interrupting all threads
@@ -94,16 +90,12 @@ public class Runner {
                 truckListener.onFinish();
             }
         }
-        state = ExecuteState.NONWORKING;
+        executor.interrupt();
     }
 
     public interface TruckListener extends EventListener {
         void truckMoved(Truck truck, Collection<Creature> creatures);
         void onStart();
         void onFinish();
-    }
-
-    private enum ExecuteState {
-        NONWORKING, WORKING
     }
 }
