@@ -18,6 +18,8 @@ public class AppSettings {
     public static final int CREATURE_WIDTH = 10;
     public static final int CREATURE_HEIGHT = 10;
 
+    public static final double MARGIN_FROM_TRUCK = 120;
+
     public static final Color SWAN_COLOR = Color.BLUE;
     public static final Color PIKE_COLOR = Color.RED;
     public static final Color CRAWFISH_COLOR = Color.GREEN;

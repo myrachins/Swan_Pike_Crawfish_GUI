@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
 
+import static settings.AppSettings.MARGIN_FROM_TRUCK;
+
 public class CanvasController implements Initializable {
     public Canvas canvas;
     private ArrayList<Pair<Double, Double>> truckHistory;
@@ -30,10 +32,12 @@ public class CanvasController implements Initializable {
                     GraphicsContext gc = canvas.getGraphicsContext2D();
                     clearCanvas();
                     synchronized (truck) {
-                        drawHistory(gc);
-                        drawTruck(gc, truck);
+                        double xShift = canvas.getWidth() / 2 - truck.getX();
+                        double yShift = canvas.getHeight() / 2 - truck.getY();
+                        drawHistory(gc, xShift, yShift);
+                        drawTruck(gc, truck, xShift, yShift);
                         truckHistory.add(new Pair<>(truck.getX(), truck.getY())); // adding new element to history
-                        creatures.forEach((creature) -> drawCreature(gc, truck, creature));
+                        creatures.forEach((creature) -> drawCreature(gc, truck, creature, xShift, yShift));
                         truck.notifyAll();
                     }
                 }
@@ -61,14 +65,6 @@ public class CanvasController implements Initializable {
         }
     }
 
-    private double getCanvasXCenter() {
-        return canvas.getWidth() / 2;
-    }
-
-    private double getCanvasYCenter() {
-        return canvas.getHeight() / 2;
-    }
-
     private void drawBorder() {
         synchronized (canvas) {
             GraphicsContext gc = canvas.getGraphicsContext2D() ;
@@ -78,22 +74,22 @@ public class CanvasController implements Initializable {
         }
     }
 
-    private void drawTruck(GraphicsContext gc, Truck truck) {
+    private void drawTruck(GraphicsContext gc, Truck truck, double xShift, double yShift) {
         synchronized (truck) {
             gc.setFill(Color.BLACK);
-            gc.fillOval(truck.getX() + getCanvasXCenter(), truck.getY() + getCanvasYCenter(),
+            gc.fillOval(truck.getX() + xShift, truck.getY() + yShift,
                     AppSettings.TRUCK_WIDTH, AppSettings.TRUCK_HEIGHT);
             truck.notifyAll();
         }
     }
 
-    private void drawCreature(GraphicsContext gc, Truck truck, Creature creature) {
+    private void drawCreature(GraphicsContext gc, Truck truck, Creature creature, double xShift, double yShift) {
         synchronized (truck) {
             synchronized (creature) {
                 gc.setFill(creature.getColor());
-                double x = Math.cos(Math.PI * creature.getAngle() / 180f) * 100 + truck.getX();
-                double y = Math.sin(Math.PI * creature.getAngle() / 180f) * 100 + truck.getY();
-                gc.fillOval(x + getCanvasXCenter(), y + getCanvasYCenter(),
+                double x = Math.cos(Math.PI * creature.getAngle() / 180f) * MARGIN_FROM_TRUCK + truck.getX();
+                double y = Math.sin(Math.PI * creature.getAngle() / 180f) * MARGIN_FROM_TRUCK  + truck.getY();
+                gc.fillOval(x + xShift, y + yShift,
                         AppSettings.CREATURE_WIDTH, AppSettings.CREATURE_HEIGHT);
                 creature.notifyAll();
             }
@@ -101,10 +97,10 @@ public class CanvasController implements Initializable {
         }
     }
 
-    private void drawHistory(GraphicsContext gc) {
+    private void drawHistory(GraphicsContext gc, double xShift, double yShift) {
         gc.setFill(Color.BROWN);
         for(Pair<Double, Double> coordinate : truckHistory) {
-            gc.fillOval(coordinate.getKey() + getCanvasXCenter(), coordinate.getValue() + getCanvasYCenter(),
+            gc.fillOval(coordinate.getKey() + xShift, coordinate.getValue() + yShift,
                     AppSettings.TRUCK_WIDTH, AppSettings.TRUCK_HEIGHT);
         }
     }
