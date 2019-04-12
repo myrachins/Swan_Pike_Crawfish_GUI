@@ -47,9 +47,9 @@ public class Runner {
         for(Creature creature : creatures) {
             threads.add(new Thread(() -> {
                 while (true) {
-                    creature.moveTruck(truck, attributes.getForceLowBound(), attributes.getForceUpperBound());
-                    System.out.println("Trucked moved by " + creature.getName());
                     synchronized (truckListeners) {
+                        creature.moveTruck(truck, attributes.getForceLowBound(), attributes.getForceUpperBound());
+                        System.out.println("Trucked moved by " + creature.getName());
                         for(TruckListener truckListener : truckListeners) {
                             truckListener.truckMoved(truck, creatures);
                         }
